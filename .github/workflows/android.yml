@@ -1,0 +1,40 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    - name: Descomprimir archivo ZIP
+      run: unzip -o *.zip
+
+    - name: Configurar Java JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Dar permisos a Gradle
+      run: chmod +x gradlew || chmod +x */gradlew
+
+    - name: Compilar APK
+      run: |
+        if [ -f "./gradlew" ]; then
+          ./gradlew assembleDebug
+        else
+          cd $(find . -maxdepth 2 -name gradlew -exec dirname {} \;) && ./gradlew assembleDebug
+        fi
+
+    - name: Guardar el APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-debug
+        path: '**/build/outputs/apk/debug/*.apk'
