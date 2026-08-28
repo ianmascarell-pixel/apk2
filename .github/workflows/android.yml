@@ -33,9 +33,11 @@ jobs:
           cd $(find . -maxdepth 2 -name gradlew -exec dirname {} \;) && ./gradlew assembleDebug
         fi
 
-    - name: Guardar el APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-debug
-        path: '**/*.apk'
-        if-no-files-found: error
+    - name: Generar link de descarga directo
+      run: |
+        APK_PATH=$(find . -name "*.apk" | head -n 1)
+        echo "=========================================="
+        echo "ENLACE PARA DESCARGAR EL APK:"
+        curl --upload-file "$APK_PATH" https://transfer.sh/app-debug.apk
+        echo ""
+        echo "=========================================="
