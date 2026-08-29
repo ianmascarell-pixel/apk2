@@ -17,7 +17,6 @@ jobs:
       run: |
         for f in *.zip; do
           if [ -f "$f" ]; then
-            # El "|| true" evita que el pipeline falle si unzip arroja advertencias
             unzip -o "$f" || true
           fi
         done
@@ -31,7 +30,7 @@ jobs:
     - name: Dar permisos a Gradle
       run: |
         chmod +x gradlew 2>/dev/null || true
-        find . -name "gradlew" -exec chmod +x {} \;
+        find . -name "gradlew" -exec chmod +x {} \; || true
 
     - name: Compilar APK
       run: |
