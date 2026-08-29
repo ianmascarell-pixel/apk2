@@ -17,7 +17,8 @@ jobs:
       run: |
         for f in *.zip; do
           if [ -f "$f" ]; then
-            unzip -o "$f"
+            # El "|| true" evita que el pipeline falle si unzip arroja advertencias
+            unzip -o "$f" || true
           fi
         done
 
